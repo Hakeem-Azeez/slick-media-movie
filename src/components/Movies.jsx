@@ -1,37 +1,44 @@
 import { Box, Flex, Input, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import List from './List';
 import './Movie.css';
 
 function Movies() {
-  const movieTitle = [
-    'avengers',
-    'captain america',
-    'the martian',
-    'ambulance',
-    'annabelle',
-    'batman',
-    'superman',
-    'immortal',
-    'clash of the titans',
-    'the witch',
-    'oblivion',
-  ];
 
-  const MOVIE_API = `http://www.omdbapi.com/?apikey=1eb052a6&t=`;
+  const movieTitle = [
+  {
+    genre: 'action', titles: ['avengers',
+      'captain america', 'ambulance', 'batman',
+      'superman',
+      'immortal',
+      'clash of the titans',]
+  },
+    { genre: 'adventure', titles: [
+      'the martian',
+      'annabelle',
+      'the witch',
+      'oblivion',] }
+
+]
+
+  const MOVIE_API = `https://www.omdbapi.com/?apikey=1eb052a6&t=`;
 
   const [movie, setMovie] = useState([]);
 
   useEffect(() => {
-    movieTitle.forEach(t => {
-      fetch(MOVIE_API + t)
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          setMovie(movie => [...movie, data]);
-        });
-    });
+    movieTitle.forEach(movies => {
+      movies.titles.forEach(title => {
+        fetch(MOVIE_API + title)
+          .then(res => res.json())
+          .then(data => {
+            // console.log(data);
+            setMovie(movie=>[...movie, data]);
+          })
+      });
+    })
   }, []);
-  console.log(movie);
+
+  console.log(movie)
 
   return (
     <>
@@ -88,37 +95,11 @@ function Movies() {
           <Text mb="8px">Search:</Text>
           <Input size="sm" />
         </Box>
+        <Box m={10}>Action</Box>
+        <List movies={ movie} genre = 'Action' />
+        <Box m={10}>Adventure</Box>
+        <List movies={ movie} genre = 'Adventure' />
 
-        <Flex
-          w={'100%'}
-          mt={{ base: '33px', md: '48px', lg: '48px' }}
-          justify="center"
-          gap={10}
-          alignItems={'center'}
-          p={'10px'}
-          direction="row"
-          wrap={'wrap'}
-        >
-          {movie.map((m, i) => (
-            <Flex direction="column" key={i}>
-              <>
-                <Box mb={2}>{m.Genre}</Box>
-                <Box w="300px" h="300px" position="relative">
-                  <img className="poster" src={m.Poster} alt={m.Title} />
-                  <Box
-                    position="absolute"
-                    top="50%"
-                    left="100"
-                    color={'white'}
-                    fontSize="30px"
-                  >
-                    {m.Title}
-                  </Box>
-                </Box>
-              </>
-            </Flex>
-          ))}
-        </Flex>
       </Box>
     </>
   );
