@@ -99,7 +99,6 @@ function Movies() {
         <List movies={ movie} genre = 'Action' />
         <Box m={10}>Adventure</Box>
         <List movies={ movie} genre = 'Adventure' />
-
       </Box>
     </>
   );
